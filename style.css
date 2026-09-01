@@ -1,0 +1,322 @@
+@keyframes moveBackground {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: var(--bg-width, 512px) var(--bg-height, 512px);
+    }
+}
+
+body {
+    margin: 0;
+    background-color: black;
+    background-image: url("/img/space.gif");
+    background-position: 0 0;
+    transition: background-image 1s;
+    animation: moveBackground var(--bg-speed, 10s) linear infinite;
+    font-family: Arial, sans-serif;
+    color: #ddd;
+    overflow-y: hidden;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+    padding: 40px;
+}
+
+.sidebar,
+.content {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+        url("img/maincontent.gif");
+    border: 5px solid transparent;
+    border-image: url("img/boxes.jpg") 5 round;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-height: 80vh;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+nav a {
+    color: #aaa;
+    cursor: pointer;
+}
+
+nav a.active {
+    color: white;
+    font-weight: bold;
+}
+
+.content {
+    height: 80vh;
+    overflow: hidden;
+    position: relative;
+    gap: 40px;
+    container-type: size;
+    container-name: gamearea;
+}
+
+.tab-content {
+    display: block;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 40px;
+    pointer-events: none;
+    contain: paint;
+}
+
+.tab-content.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tab-content.flex-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+}
+
+.tab-header {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.game-search {
+    flex: 0 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    background: #2e2b2e;
+    border: 5px solid transparent;
+    border-image: url("img/boxes.jpg") 5 round;
+    color: #ddd;
+    font-family: inherit;
+}
+
+.game-search:focus {
+    outline: none;
+    border-color: #79c5dc;
+}
+
+.game-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 420px;
+    display: flex;
+    gap: 20px;
+    background: rgba(20, 20, 20, 0.95);
+    border: 5px solid transparent;
+    border-image: url("img/boxes.jpg") 5 round;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+.game-panel.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.game-panel-image {
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+    background: #2e2b2e;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.game-panel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.game-panel-info h2 {
+    margin: 0 0 8px;
+    color: #75d17a;
+    text-decoration: bold;
+}
+.game-panel-info p {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: #ccc;
+}
+.game-panel-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+.game-panel-buttons button {
+    flex: 1;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.game-panel-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.game-dialog {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.game-dialog.active {
+    display: flex;
+}
+
+.game-dialog-inner {
+    position: relative;
+    width: 90vw;
+    height: 85vh;
+    background: #000;
+    border: 5px solid transparent;
+    border-image: url("img/boxes.jpg") 5 round;
+    overflow: hidden;
+}
+.game-dialog-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    border-radius: 0%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+#gameFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.g-launch {
+    position: relative;
+    background: transparent;
+    border: 2px solid white;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+    opacity: 1;
+    transition: border-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+#gameList:has(.g-launch:hover) .g-launch:not(:hover) {
+    opacity: 0.4;
+    transform: scale(0.98);
+}
+
+.g-launch img {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.g-launch:hover {
+    border-color: #79c5dc;
+    transform: scale(1.05);
+}
+
+.g-launch:active {
+    transform: scale(0.95);
+    opacity: 0.6;
+}
+
+.pinwheel-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140cqmin;
+  height: 140cqmin;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.7s ease, top 0.2s ease, left 0.2s ease;
+}
+
+.pinwheel-bg.active {
+  opacity: 1;
+}
+
+.pinwheel-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 142%;
+  height: 142%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: repeating-conic-gradient(rgba(255, 255, 255, 0.05) 0deg 5deg,
+      rgba(255, 255, 255, 0) 5deg 11.25deg);
+  -webkit-mask-image: radial-gradient(circle, black 0%, black 15%, transparent 45%);
+  mask-image: radial-gradient(circle, black 0%, black 15%, transparent 45%);
+}
+
+.pinwheel-bg.active .pinwheel-spin {
+  animation: pinwheelSpin 15s linear infinite;
+}
+
+@keyframes pinwheelSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
