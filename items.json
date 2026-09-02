@@ -376,5 +376,12 @@
     "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@8165e01/img/thumbmails/thereisnogame.png",
     "description": "A little game that's not a game, winner of an old game jam that nobody's ever heard of. So DON'T INSTALL IT!",
     "players": "1 player"
+  },
+  {
+    "id": "technonyte00/deltarune@master",
+    "title": "DELTARUNE",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@70824ee/img/thumbmails/deltarune.jpg",
+    "description": "A HEARTFELT JOURNEY OF HUMOR AND FRIENDSHIP. UNDERTALES PARALLEL STORY. DELTARUNE.",
+    "players": "1 player"
   }
 ]
