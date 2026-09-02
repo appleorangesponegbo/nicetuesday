@@ -1,4 +1,22 @@
 let GAMES = {};
+import * as storage from './storage.js'
+
+function formatRelativeTime(ts) {
+  if (!ts) return "never";
+  const seconds = Math.floor((Date.now() - ts) / 1000);
+  if (seconds < 5) return "just now";
+  if (seconds < 60) return `${seconds} second${seconds === 1 ? "" : "s"} ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} day${days === 1 ? "" : "s"} ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months === 1 ? "" : "s"} ago`;
+  const years = Math.floor(months / 12);
+  return `${years} year${years === 1 ? "" : "s"} ago`;
+}
 
 // default repo used by the "#folder" shorthand
 // basically, if its one of our games on github, use "#"
@@ -88,8 +106,15 @@ function openGamePanel(name) {
   document.getElementById("gamePanelImg").src = data.image;
   document.getElementById("gamePanelName").textContent = data.title;
   document.getElementById("gamePanelDesc").textContent = data.description;
-  document.getElementById("gamePanelPlayers").textContent = data.players;
+  document.getElementById("gamePanelPlayers").textContent =
+    data.players + ` | ` +
+    storage.getStats(name).playCount + " plays | last played " +
+    formatRelativeTime(storage.getStats(name).lastPlayed);
   document.getElementById("gamePanel").classList.add("active");
+
+  const favBtn = document.getElementById("gamePanelFavorite");
+  favBtn.classList.toggle("favorited", storage.isFavorite(name));
+  favBtn.textContent = storage.isFavorite(name) ? "★" : "☆";
 }
 
 async function prepareGameBlobURL(name) {
@@ -189,30 +214,60 @@ async function playFullscreen(name) {
     }
 }
 
-async function playHere(name) {
+async function playGame(name) {
     try {
+        const data = GAMES[name] || { title: name, image: "" };
+        document.getElementById("gdIcon").src = data.image;
+        document.getElementById("gdName").textContent = data.title;
+
+        const statsBefore = storage.getStats(name);
+        document.getElementById("gdLastPlayed").textContent =
+            `last played ${formatRelativeTime(statsBefore.lastPlayed)}`;
+
         if (currentGameBlobURL) URL.revokeObjectURL(currentGameBlobURL);
         currentGameBlobURL = await prepareGameBlobURL(name);
         document.getElementById("gameFrame").src = currentGameBlobURL;
         document.getElementById("gameDialog").classList.add("active");
+
+        const { playCount } = storage.recordPlay(name);
+        document.getElementById("gdPlayCount").textContent =
+            `played ${playCount} time${playCount === 1 ? "" : "s"}`;
+
+        const favBtn = document.getElementById("gdFavoriteBtn");
+        const favorited = storage.isFavorite(name);
+        favBtn.classList.toggle("favorited", favorited);
+        favBtn.textContent = favorited ? "★" : "☆";
     } catch (error) {
-        console.error("Error launching game:", error);
+        console.error("error launching game:", error);
         alert("could not load game. check console for details.");
     }
 }
 
-function closeGamePanel() {
-    document.getElementById('gamePanel').classList.remove('active');
-}
-
-function closeGameDialog() {
-    document.getElementById("gameDialog").classList.remove("active");
-    document.getElementById("gameFrame").src = "";
-    if (currentGameBlobURL) {
-        URL.revokeObjectURL(currentGameBlobURL);
-        currentGameBlobURL = null;
+async function reloadCurrentGame() {
+    if (!currentGame) return;
+    try {
+        if (currentGameBlobURL) URL.revokeObjectURL(currentGameBlobURL);
+        currentGameBlobURL = await prepareGameBlobURL(currentGame);
+        document.getElementById("gameFrame").src = currentGameBlobURL;
+    } catch (error) {
+        console.error("error reloading game:", error);
+        alert("could not reload game. check console for details.");
     }
 }
+
+document.getElementById('gdCloseBtn').addEventListener('click', function () {
+  document.getElementById('gameDialog').classList.remove('active');
+});
+
+document.getElementById('gpClose').addEventListener('click', function () {
+  document.getElementById("gamePanel").classList.remove("active");
+  document.getElementById("gameFrame").src = "";
+  document.getElementById("gdFullscreenMenu").classList.remove("open");
+  if (currentGameBlobURL) {
+    URL.revokeObjectURL(currentGameBlobURL);
+    currentGameBlobURL = null;
+  }
+});
 
 const pinwheelBg = document.getElementById('pinwheelBg');
 const gameArea = document.querySelector('.content'); // the cqmin/positioning container
@@ -239,16 +294,61 @@ document.getElementById('gameList').addEventListener('mouseout', (e) => {
     }
 });
 
-document.getElementById("gamePanelPlayHere").addEventListener("click", () =>
-  currentGame &&
-  playHere(currentGame) &&
-  document.getElementById("gamePanel").classList.remove("active"),
-);
+document.getElementById("gamePanelPlay").addEventListener("click", () => {
+  if (!currentGame) return;
+  playGame(currentGame);
+  document.getElementById("gamePanel").classList.remove("active");
+});
 
-document.getElementById("gamePanelPlayFullscreen").addEventListener("click", () =>
-  currentGame &&
-  playFullscreen(currentGame) &&
-  document.getElementById("gamePanel").classList.remove("active"),
-);
+document.getElementById("gamePanelFavorite").addEventListener("click", () => {
+  if (!currentGame) return;
+  const favorited = storage.toggleFavorite(currentGame);
+  const btn = document.getElementById("gamePanelFavorite");
+  btn.classList.toggle("favorited", favorited);
+  btn.textContent = favorited ? "★" : "☆";
+});
+
+document.getElementById("gdFavoriteBtn").addEventListener("click", () => {
+  if (!currentGame) return;
+  const favorited = storage.toggleFavorite(currentGame);
+  const btn = document.getElementById("gdFavoriteBtn");
+  btn.classList.toggle("favorited", favorited);
+  btn.textContent = favorited ? "★" : "☆";
+
+  // keep the hover panel's star in sync if it's still showing this game
+  const panelFavBtn = document.getElementById("gamePanelFavorite");
+  if (currentGame && panelFavBtn) {
+    panelFavBtn.classList.toggle("favorited", favorited);
+    panelFavBtn.textContent = favorited ? "★" : "☆";
+  }
+});
+
+document.getElementById("gdReloadBtn").addEventListener("click", () => {
+  reloadCurrentGame();
+});
+
+document.getElementById("gdFullscreenBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  document.getElementById("gdFullscreenMenu").classList.toggle("open");
+});
+
+document.addEventListener("click", () => {
+  document.getElementById("gdFullscreenMenu").classList.remove("open");
+});
+
+document.getElementById("gdFullscreenTab").addEventListener("click", () => {
+  document.getElementById("gdFullscreenMenu").classList.remove("open");
+  const inner = document.querySelector('#gameFrame');
+  if (inner.requestFullscreen) {
+    inner.requestFullscreen().catch((err) =>
+      console.error("could not enter fullscreen:", err),
+    );
+  }
+});
+
+document.getElementById("gdNewTab").addEventListener("click", () => {
+  document.getElementById("gdFullscreenMenu").classList.remove("open");
+  if (currentGame) playFullscreen(currentGame);
+});
 
 loadGames();
