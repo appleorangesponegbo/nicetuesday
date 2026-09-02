@@ -257,16 +257,16 @@ async function reloadCurrentGame() {
 
 document.getElementById('gdCloseBtn').addEventListener('click', function () {
   document.getElementById('gameDialog').classList.remove('active');
-});
-
-document.getElementById('gpClose').addEventListener('click', function () {
-  document.getElementById("gamePanel").classList.remove("active");
   document.getElementById("gameFrame").src = "";
   document.getElementById("gdFullscreenMenu").classList.remove("open");
   if (currentGameBlobURL) {
     URL.revokeObjectURL(currentGameBlobURL);
     currentGameBlobURL = null;
   }
+});
+
+document.getElementById('gpClose').addEventListener('click', function () {
+  document.getElementById("gamePanel").classList.remove("active");
 });
 
 const pinwheelBg = document.getElementById('pinwheelBg');
