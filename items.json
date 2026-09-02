@@ -383,5 +383,26 @@
     "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@70824ee/img/thumbmails/deltarune.jpg",
     "description": "A HEARTFELT JOURNEY OF HUMOR AND FRIENDSHIP. UNDERTALES PARALLEL STORY. DELTARUNE.",
     "players": "1 player"
+  },
+  {
+    "id": "bengang904/gta3@master",
+    "title": "Grand Theft Auto 3",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@26b860a/img/thumbmails/gta3.png",
+    "description": "Welcome to Liberty City. Where it all began. With stellar voice acting, a darkly comic storyline, a stunning soundtrack and revolutionary open-world gameplay, Grand Theft Auto III is the game that defined the open world genre for a generation.",
+    "players": "1 player"
+  },
+  {
+    "id": "kaloodinaz/coreball-game@master",
+    "title": "Coreball",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@b24d085/img/thumbmails/coreball.png",
+    "description": "a fun and addictive game where you put sticks into a ball or something. Don't ask me.",
+    "players": "1 player"
+  },
+  {
+    "id": "hamse122/Escape-Road@master",
+    "title": "Escape Road",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@b24d085/img/thumbmails/escaperoad2.jpg",
+    "description": "A fun game where you escape the cops in a really cool looking car.",
+    "players": "1 player"
   }
 ]
