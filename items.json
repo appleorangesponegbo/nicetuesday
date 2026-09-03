@@ -404,5 +404,12 @@
     "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@b24d085/img/thumbmails/escaperoad2.jpg",
     "description": "A fun game where you escape the cops in a really cool looking car.",
     "players": "1 player"
+  },
+  {
+    "id": "Inkin6779/MeatBoy@main",
+    "title": "Meat Boy",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/supermeatboy.jpg",
+    "description": "The newgrounds prototype of the hit xbox 360 game SUPER MEAT BOY!",
+    "players": "1 player"
   }
 ]
