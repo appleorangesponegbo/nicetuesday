@@ -411,5 +411,26 @@
     "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/supermeatboy.jpg",
     "description": "The newgrounds prototype of the hit xbox 360 game SUPER MEAT BOY!",
     "players": "1 player"
+  },
+  {
+    "id": "web-ports/pvz@main",
+    "title": "Plants Vs Zombies: GOTY Edtion",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/pvz.jpg",
+    "description": "The game that started the Plants Vs Zombies franchise. Place down plants on a grid so you can fight the zombies.",
+    "players": "1 player"
+  },
+  {
+    "id": "gumgum3294/Alien-Hominid@main",
+    "title": "Alien Hominid",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/alienhominid.jpg",
+    "description": "The Newgrounds version of Alien Hominid. You play as an alien trying to escape the CIA. SUPER HARD GAME so expect to fail ALOT.",
+    "players": "1 player"
+  },
+  {
+    "id": "hsinidev/a-dance-of-fire-and-ice@master",
+    "title": "A Dance Of Fire And Ice",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/adanceoffireandice.jpg",
+    "description": "A neat little rhythm game where you guide two orbiting planets. pretty strict game so it might be a lil hard.",
+    "players": "1 player"
   }
 ]
