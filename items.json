@@ -420,7 +420,7 @@
     "players": "1 player"
   },
   {
-    "id": "gumgum3294/Alien-Hominid@main",
+    "id": "@bubbls/UGS-file-encryption@a3f1c2d9db55885e9c8279cf22cf6ceba4451152/alien-hominid.swf",
     "title": "Alien Hominid",
     "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/alienhominid.jpg",
     "description": "The Newgrounds version of Alien Hominid. You play as an alien trying to escape the CIA. SUPER HARD GAME so expect to fail ALOT.",
@@ -431,6 +431,34 @@
     "title": "A Dance Of Fire And Ice",
     "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/adanceoffireandice.jpg",
     "description": "A neat little rhythm game where you guide two orbiting planets. pretty strict game so it might be a lil hard.",
+    "players": "1 player"
+  },
+  {
+    "id": "mopsjaja2/CutTheRopeHTML5@main",
+    "title": "Cut The Rope",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@98927a0/img/thumbmails/cuttherope.jpg",
+    "description": "cut the rope is a hit game where you cut a rope to give a green gremlin a piece of peppermint.",
+    "players": "1 player"
+  },
+  {
+    "id": "@CBGamesdev/chilibowlflash@main/bloxorz.swf",
+    "title": "Bloxorz",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@98927a0/img/thumbmails/bloxorz.png",
+    "description": "a neat little puzzle game where you control a 3d rusted shape and have to put it in a hole.",
+    "players": "1 player"
+  },
+  {
+    "id": "@CBGamesdev/chilibowlflash@main/run2.swf",
+    "title": "Run 2",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/run-2-944280601.png",
+    "description": "a autorunner where you run as a little critter and you can wallrun.",
+    "players": "1 player"
+  },
+  {
+    "id": "@CBGamesdev/chilibowlflash@main/papassushiria.swf",
+    "title": "Papas Sushiria",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/papassushiria.jpg",
+    "description": "a management sim where you take orders, make sushi and serve them to a different customers.",
     "players": "1 player"
   }
 ]

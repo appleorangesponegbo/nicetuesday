@@ -1,6 +1,10 @@
 (function () {
   const GITHUB_RE = /^https?:\/\/(?:www\.)?github\.com\/([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:\/(tree|blob)\/([^\/]+)(?:\/(.*))?)?\/?$/i;
 
+  const DEFAULT_REPO_OWNER = "appleorangesponegbo";
+  const DEFAULT_REPO_NAME = "projects";
+  const DEFAULT_REPO_REF = "22cdfc1";
+
   function parseGithubUrl(url) {
     const m = url.trim().match(GITHUB_RE);
     if (!m) return null;
@@ -14,17 +18,31 @@
     };
   }
 
-  function computeId(owner, repo, branch, path) {
-    let id = `${owner}/${repo}`;
-    if (branch) id += `@${branch}`;
-    if (path) {
-      let p = path.replace(/^\/+|\/+$/g, '');
+  function computeId(owner, repo, branch, path, isSwf) {
+    let p = path ? path.replace(/^\/+|\/+$/g, '') : '';
+    if (!isSwf && p) {
       if (/(^|\/)index\.html$/i.test(p)) {
         p = p.replace(/(^|\/)index\.html$/i, '');
       }
       p = p.replace(/\/+$/, '');
+    }
+
+    const isDefaultRepo = !isSwf &&
+      owner === DEFAULT_REPO_OWNER &&
+      repo === DEFAULT_REPO_NAME &&
+      (!branch || branch === DEFAULT_REPO_REF);
+
+    let id;
+    if (isDefaultRepo) {
+      id = '#' + p;
+    } else {
+      id = `${owner}/${repo}`;
+      if (branch) id += `@${branch}`;
       if (p) id += `/${p}`;
     }
+
+    if (isSwf) id = '@' + id;
+
     return id;
   }
 
@@ -145,7 +163,7 @@
       steps.push({
         key: 'path',
         heading: 'wheres the main file (if not repo root)?',
-        hint: 'e.g. "assets/index.html" or "assets". leave blank for root directory. index.html is assumed and stripped automatically',
+        hint: 'e.g. "assets/index.html" or "assets". leave blank for root directory. index.html is assumed and stripped automatically. point it at a .swf to run it through the flash emulator instead',
         field: 'input'
       });
     }
@@ -220,7 +238,8 @@
     }
 
     function renderResult() {
-      const id = computeId(state.owner, state.repo, state.branch, state.path);
+      const isSwf = /\.swf$/i.test(state.path || '');
+      const id = computeId(state.owner, state.repo, state.branch, state.path, isSwf);
       const obj = {
         id,
         title: state.title || guessTitle(state.repo),
@@ -228,13 +247,13 @@
         description: state.description,
         players: state.players
       };
-      const output = ',\n  {\n' +
-        `    "id": "${escapeJson(obj.id)}",\n` +
-        `    "title": "${escapeJson(obj.title)}",\n` +
-        `    "image": "${escapeJson(obj.image)}",\n` +
-        `    "description": "${escapeJson(obj.description)}",\n` +
-        `    "players": "${escapeJson(obj.players)}"\n` +
-        '  }';
+      const output = ',\n{\n' +
+        `  "id": "${escapeJson(obj.id)}",\n` +
+        `  "title": "${escapeJson(obj.title)}",\n` +
+        `  "image": "${escapeJson(obj.image)}",\n` +
+        `  "description": "${escapeJson(obj.description)}",\n` +
+        `  "players": "${escapeJson(obj.players)}"\n` +
+        '}';
 
       dialog.innerHTML = `
         <h3>youre done</h3>

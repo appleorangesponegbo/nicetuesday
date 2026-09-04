@@ -28,6 +28,7 @@ const DEFAULT_REPO_REF = "22cdfc1";
 
 function resolveGameSource(id) {
   let owner, repo, ref, rest;
+  let isSwf = false;
 
   if (id.startsWith("#")) {
     owner = DEFAULT_REPO_OWNER;
@@ -35,9 +36,15 @@ function resolveGameSource(id) {
     ref = DEFAULT_REPO_REF;
     rest = id.slice(1);
   } else {
-    const match = id.match(/^([^/]+)\/([^/@]+)@([^/]+)(?:\/(.+))?$/);
+    let body = id;
+    if (id.startsWith("@")) {
+      isSwf = true;
+      body = id.slice(1);
+    }
+
+    const match = body.match(/^([^/]+)\/([^/@]+)@([^/]+)(?:\/(.+))?$/);
     if (!match) {
-      throw new Error(`invalid game id format: "${id}", expected "#[folder/][file.html]" or "owner/repo@ref[/folder][/file.html]"`);
+      throw new Error(`invalid game id format: "${id}", expected "#[folder/][file.html]", "owner/repo@ref[/folder][/file.html]", or "@owner/repo@ref/folder/file.swf"`);
     }
     [, owner, repo, ref, rest] = match;
   }
@@ -45,7 +52,18 @@ function resolveGameSource(id) {
   let folder = "";
   let file = "index.html";
 
-  if (rest) {
+  if (isSwf) {
+    if (!rest) {
+      throw new Error(`invalid game id format: "${id}", "@" syntax requires a path to a .swf file`);
+    }
+    const lastSlash = rest.lastIndexOf("/");
+    const lastSegment = lastSlash === -1 ? rest : rest.slice(lastSlash + 1);
+    if (!/\.swf$/i.test(lastSegment)) {
+      throw new Error(`invalid game id format: "${id}", "@" syntax expects a path ending in .swf`);
+    }
+    file = lastSegment;
+    folder = lastSlash === -1 ? "" : rest.slice(0, lastSlash);
+  } else if (rest) {
     const lastSlash = rest.lastIndexOf("/");
     const lastSegment = lastSlash === -1 ? rest : rest.slice(lastSlash + 1);
 
@@ -60,7 +78,38 @@ function resolveGameSource(id) {
   const folderSegment = folder ? `${folder}/` : "";
   const baseUrl = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@${ref}/${folderSegment}`;
 
-  return { baseUrl, indexUrl: `${baseUrl}${file}` };
+  return { baseUrl, indexUrl: `${baseUrl}${file}`, isSwf };
+}
+
+// wraps a .swf url in a minimal page that boots it with ruffle.
+// (could swap this for waflash instead if ruffle ever gives us trouble
+// with a particular game)
+function buildSwfWrapperHtml(swfUrl) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>flash</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+  ruffle-player { width: 100%; height: 100%; display: block; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle"></script>
+</head>
+<body>
+<script>
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.addEventListener("load", () => {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    player.style.width = "100%";
+    player.style.height = "100%";
+    document.body.appendChild(player);
+    player.load(${JSON.stringify(swfUrl)});
+  });
+</script>
+</body>
+</html>`;
 }
 
 async function loadGames() {
@@ -118,7 +167,14 @@ function openGamePanel(name) {
 }
 
 async function prepareGameBlobURL(name) {
-    const { baseUrl, indexUrl } = resolveGameSource(name);
+    const { baseUrl, indexUrl, isSwf } = resolveGameSource(name);
+
+    if (isSwf) {
+        const htmlContent = buildSwfWrapperHtml(indexUrl);
+        const blob = new Blob([htmlContent], { type: "text/html" });
+        return URL.createObjectURL(blob);
+    }
+
     const response = await fetch(indexUrl);
     if (!response.ok) throw new Error(`http error! status: ${response.status}`);
     let htmlContent = await response.text();
