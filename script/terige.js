@@ -141,12 +141,14 @@
         field: 'input'
       });
     }
-    steps.push({
-      key: 'path',
-      heading: 'wheres the main file (if not repo root)?',
-      hint: 'e.g. "assets/index.html" or "assets". leave blank for root directory. index.html is assumed and stripped automatically',
-      field: 'input'
-    });
+    if (!state.path) {
+      steps.push({
+        key: 'path',
+        heading: 'wheres the main file (if not repo root)?',
+        hint: 'e.g. "assets/index.html" or "assets". leave blank for root directory. index.html is assumed and stripped automatically',
+        field: 'input'
+      });
+    }
     steps.push({
       key: 'title',
       heading: 'whats a good title?',
