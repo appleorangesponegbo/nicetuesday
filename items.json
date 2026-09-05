@@ -456,9 +456,247 @@
   },
   {
     "id": "@CBGamesdev/chilibowlflash@main/papassushiria.swf",
-    "title": "Papas Sushiria",
+    "title": "Papa's Sushiria",
     "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/papassushiria.jpg",
     "description": "a management sim where you take orders, make sushi and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ahrdevelopers/papas-scooperia@main/game.swf",
+    "title": "Papa's Scooperia",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@f1c5246/img/thumbmails/papasscooperia.jpg",
+    "description": "a management sim where you take orders, make ice cream and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@Cookie724/papas-bakeria-games@main/papasbakeria.swf",
+    "title": "Papa's Bakeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@608d25a/img/thumbmails/papasbakeria.png",
+    "description": "a management sim where you take orders, make baked goods and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@Cookie724/papas-pizzeria-games@main/papaspizzeria_v2.swf",
+    "title": "Papa's Pizzeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@a630ab5/img/thumbmails/papaspizzeria.png",
+    "description": "a management sim where you take orders, make pizza and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@1002unblockedgames/PapasCheeseria@main/58GqwwuGG1j0oB.swf",
+    "title": "Papa's Cheeseria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@5428d67/img/thumbmails/papascheeseria.jpg",
+    "description": "a management sim where you take orders, make grilled cheeses and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasDonuteria@gh-pages/lYyoqspm1e24IL.swf",
+    "title": "Papa's Donuteria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@1b3c4ce/img/thumbmails/papasdonuteria.jpg",
+    "description": "a management sim where you take orders, make donuts and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasPastaria@gh-pages/LZA1w2C4888Z3a.swf",
+    "title": "Papa's Pastaria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@445bd35/img/thumbmails/papaspastaria.png",
+    "description": "a management sim where you take orders, make pastas and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasHotDoggeria@gh-pages/0uAAY0zUH8ptip.swf",
+    "title": "Papa's Hotdoggeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@d016e13/img/thumbmails/papashotdoggeria.jpg",
+    "description": "a management sim where you take orders, make hot dogs and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasWingeria@gh-pages/hTKOPAtRceVKuC.swf",
+    "title": "Papa's Wingeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@085a0be/img/thumbmails/papaswingeria.jpg",
+    "description": "a management sim where you take orders, make wings and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@AlexOpedia/PapasPancakeria@main/papaspancakeria.swf",
+    "title": "Papa's Pancakeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@9854f5c/img/thumbmails/papaspancakeria.png",
+    "description": "a management sim where you take orders, make pancakes and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasFreezeria@gh-pages/PrM65sUhio0RzE.swf",
+    "title": "Papa's Freezeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@76066d9/img/thumbmails/papasfreezeria.jpg",
+    "description": "a management sim where you take orders, make sundaes and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasTacoMia@gh-pages/SQyvNBxOG2f1Uq.swf",
+    "title": "Papa's Taco Mia",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@a605c8e/img/thumbmails/papastacomia.png",
+    "description": "a management sim where you take orders, make tacos and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "@ubg89/PapasBurgeria@gh-pages/YHiaMNblkItEvi.swf",
+    "title": "Papa's Burgeria",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@6d5a3ae/img/thumbmails/papasburgeria.jpg",
+    "description": "a management sim where you take orders, make burgers and serve them to a different customers.",
+    "players": "1 player"
+  },
+  {
+    "id": "tubeclicker/soccer-random@main",
+    "title": "Soccer Random",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@d72c3ed/img/thumbmails/soccerrandom.png",
+    "description": "Soccer Random is a two-player pixel-art soccer game with limited controls but unlimited randomness.",
+    "players": "1 player"
+  },
+  {
+    "id": "@bubbls/UGS-file-encryption@main/bloons-tower-defense-1.swf",
+    "title": "Bloons TD 1",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/btd1.png",
+    "description": "the start of the best td series. place monkeys and pop balloons to get more money so you can get more monkeys to pop more balloons for more money.",
+    "players": "1 player"
+  },
+  {
+    "id": "BluePotato102/drive-mad@main",
+    "title": "Drive Mad",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@dd7e999/img/thumbmails/drivemad.png",
+    "description": "Drive Mad is a physics-based car game that tests how well you can control your car on increasingly difficult levels.",
+    "players": "1 player"
+  },
+  {
+    "id": "@bubbls/UGS-file-encryption@main/Bloons_Tower_Defense_3.swf",
+    "title": "Bloons TD 3",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/btd33.jpg",
+    "description": "the third game in the bloons franchise. new towers and more maps",
+    "players": "1 player"
+  },
+  {
+    "id": "@bubbls/UGS-file-encryption@main/Burrito_Bison.swf",
+    "title": "Burrito Bison",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/burritobison.jpg",
+    "description": "a game where you fly really far and squish gummy bears to go faster. this is the flash port and not the one you can get on the play store and app store on ios and android.",
+    "players": "1 player"
+  },
+  {
+    "id": "@bubbls/UGS-file-encryption@main/theimpossiblequiz2.swf",
+    "title": "The Impossible Quiz 2",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/theimpossiblequiz22.jpg",
+    "description": "the impossible quiz full of impossible questions. it is SO impossible you wont even BEAT it.",
+    "players": "1 player"
+  },
+  {
+    "id": "@CBGamesdev/chilibowlflash@main/theworldshardestgame.swf",
+    "title": "The Worlds Hardest Game",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/worldshardestgame.jpg",
+    "description": "the worlds HARDEST GAME. it is so hard you wont even beat it. and if you beat it you will get a big hug.",
+    "players": "1 player"
+  },
+  {
+    "id": "@hsinidev/shift3@master/shift-3.swf",
+    "title": "Shift 3",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/shift3.jpg",
+    "description": "shift 3 is a puzzle game platformer where you shift between black and white spaces",
+    "players": "1 player"
+  },
+  {
+    "id": "bubbls/ugss@main/nzp-",
+    "title": "Nazi Zombies: Portable",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@338c8fe/img/thumbmails/nzp.png",
+    "description": "nazi zombies portable is a web version of call of duty world at war zombies.",
+    "players": "1 player"
+  },
+  {
+    "id": "bubbls/ugss@main/people-playground",
+    "title": "People Playground",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/peopleplayground.jpg",
+    "description": "people playground is a game where you test on humans or robots. dont question if these tests are humane or legal.",
+    "players": "1 player"
+  },
+  {
+    "id": "@BCHS-HTML-Games/Achievement-Unlocked@main/achievementunlocked.swf",
+    "title": "Achievement Unlocked",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/achievementunlocked.png",
+    "description": "you play as a lil sprite dude where you gotta do simple challanges to unlock achievements.",
+    "players": "1 player"
+  },
+  {
+    "id": "bubbls/cc3d-merge@main",
+    "title": "Crazy Cattle 3D",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/crazycattle.jpg",
+    "description": "fortnite battle royale but if it was sheep. knock out sheep and be the last one standing. ",
+    "players": "1 player"
+  },
+  {
+    "id": "hsinidev/bacon-may-die@master",
+    "title": "Bacon May Die",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/baconmaydie.png",
+    "description": "Bacon May Die, so please do not lie.",
+    "players": "1 player"
+  },
+  {
+    "id": "HectorCossio/Ragdoll-Archerss@main",
+    "title": "Ragdoll Archers",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/ragdollarchers.jpg",
+    "description": "shoot arrows and try to knock another ragdoll off its platform",
+    "players": "1 player"
+  },
+  {
+    "id": "Collasperz/ragdoll-hit@main",
+    "title": "Ragdoll Hit",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/ragdollhit2.png",
+    "description": "Try your hardest to survive, it's stickman fighting time!",
+    "players": "1 player"
+  },
+  {
+    "id": "ubg98/MonkeyMart@gh-pages",
+    "title": "Monkey Mart",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/monkeymart.jpg",
+    "description": "Try your hardest to survive, it's stickman fighting time!",
+    "players": "1 player"
+  },
+  {
+    "id": "faralong/all@main/extremerun",
+    "title": "Extreme Run 3D",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@f676f77/img/thumbmails/extremerun3d.png",
+    "description": "Embark on a wild adventure in Extreme Run 3D, where the thrill never stops! Brace yourself for an electrifying rush as you sprint through stunning environments, overcoming obstacles at blazing speeds.",
+    "players": "1 player"
+  },
+  {
+    "id": "@CBGamesdev/chilibowlflash@main/fancypantsadventure.swf",
+    "title": "Fancy Pants Adventure",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/fancypantsadventure.jpg",
+    "description": "a game where you play as a cool stickman with a pencil and sick shorts. a platformer/runner akin to sonic",
+    "players": "1 player"
+  },
+  {
+    "id": "@CBGamesdev/chilibowlflash@main/ducklife3.swf",
+    "title": "Duck Life 3",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/ducklife.png",
+    "description": "a game where you take care of a duck and nurse it to proper health so you can race it for your own profit.",
+    "players": "1 player"
+  },
+  {
+    "id": "@bubbls/UGS-file-encryption@main/raft-wars-2-14853.swf",
+    "title": "Raft Wars 2",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/raftwars.png",
+    "description": "the second game in the raft wars series. same gameplay with some new stuff added in.",
+    "players": "1 player"
+  },
+  {
+    "id": "@sinceohsix/PeggleFlash@main/peggle.swf",
+    "title": "Peggle",
+    "image": "https://cdn.jsdelivr.net/gh/vibecheckbutlikecooler/didactic-rotary-phone@master/peggle.jpg",
+    "description": "a simple casual game where you shoot balls onto pegs to get the highest score. fun little timewaster",
+    "players": "1 player"
+  },
+  {
+    "id": "@appleorangesponegbo/projects@936bddc/3619.swf",
+    "title": "Multitask",
+    "image": "https://cdn.jsdelivr.net/gh/appleorangesponegbo/img@439a8f4/img/thumbmails/multitask.png",
+    "description": "a neat lil game where you gotta multitask.",
     "players": "1 player"
   }
 ]

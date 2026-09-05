@@ -105,7 +105,17 @@ function buildSwfWrapperHtml(swfUrl) {
     player.style.width = "100%";
     player.style.height = "100%";
     document.body.appendChild(player);
-    player.load(${JSON.stringify(swfUrl)});
+    const config = {
+      scale: "showAll",
+      salign: "",
+      letterbox: "on",
+      forceScale: true,
+      forceAlign: true
+    };
+    player.load({
+      url: ${JSON.stringify(swfUrl)},
+      ...config
+    });
   });
 </script>
 </body>
@@ -119,12 +129,24 @@ async function loadGames() {
     if (!response.ok) throw new Error(`http error! status: ${response.status}`);
     const games = await response.json();
 
+    var total = 0
+    var flash = 0
+    var supplied = 0
+
     games.forEach((game) => {
+      total += 1
       GAMES[game.id] = game;
 
       const btn = document.createElement("button");
       btn.className = "g-launch";
       btn.dataset.g = game.id;
+
+      if (game.id.startsWith('#')) {
+        supplied += 1
+      } else if (game.id.startsWith('@')) {
+        flash += 1
+      }
+
       btn.dataset.n = game.title;
 
       const img = document.createElement("img");
@@ -137,6 +159,10 @@ async function loadGames() {
 
       list.appendChild(btn);
     });
+
+    document.getElementById('totalgams').innerText = total;
+    document.getElementById('flashgams').innerText = flash;
+    document.getElementById('suppliedgams').innerText = supplied;
   } catch (error) {
     console.error("error loading games list:", error);
   }
@@ -183,15 +209,27 @@ async function prepareGameBlobURL(name) {
         htmlContent = "<!DOCTYPE html>\n" + htmlContent;
     }
 
-    if (/name=["']generator["']\s+content=["']Construct 3["']/i.test(htmlContent)) {
-        const mainJsMatch = htmlContent.match(/<script\s+src=["']([^"']*\bmain[a-zA-Z0-9_.-]*\.js)["'][^>]*><\/script>/i);
-        if (!mainJsMatch) {
-            console.warn("couldn't find a main*.js script tag, export format may have changed");
+    // Don't gate this on the <meta name="generator" content="Construct 3"> tag -
+    // repackaged/rebranded exports (e.g. sites that wrap the game in their own
+    // index.html template) routinely strip that tag even though the underlying
+    // main.js is still the standard Construct 3 runtime. Look for the main*.js
+    // script tag directly, and confirm it's actually a C3 runtime by checking the
+    // fetched script's own content instead.
+    // src= no longer has to be the first attribute on the tag
+    const mainJsMatch = htmlContent.match(/<script\b(?=[^>]*\bsrc=["']([^"']*\bmain[a-zA-Z0-9_.-]*\.js)["'])[^>]*><\/script>/i);
+    if (!mainJsMatch) {
+        console.warn(`[${name}] couldn't find a main*.js script tag - not a Construct 3 export, or export format changed`);
+    } else {
+        const mainJsUrl = new URL(mainJsMatch[1], baseUrl).toString();
+        const mainJsResp = await fetch(mainJsUrl);
+        if (!mainJsResp.ok) {
+            console.warn(`[${name}] fetching ${mainJsUrl} failed with status ${mainJsResp.status}`);
         } else {
-            const mainJsUrl = new URL(mainJsMatch[1], baseUrl).toString();
-            const mainJsResp = await fetch(mainJsUrl);
-            if (mainJsResp.ok) {
-                let mainJsText = await mainJsResp.text();
+            let mainJsText = await mainJsResp.text();
+
+            if (!/\bnew RuntimeInterface\(\{/.test(mainJsText)) {
+                console.warn(`[${name}] ${mainJsUrl} doesn't look like a Construct 3 runtime - skipping C3 patching`);
+            } else {
                 let patched = mainJsText;
 
                 // some builds derive their worker/JobScheduler base from
@@ -207,7 +245,23 @@ async function prepareGameBlobURL(name) {
                 patched = patched.split("location.origin").join(originlessBase);
                 patched = patched.split("location.pathname").join('"/"');
                 if (patched === beforeLocationPatch) {
-                    console.warn("main.js doesn't reference location.origin/pathname, export format may have changed");
+                    console.warn(`[${name}] main.js doesn't reference location.origin/pathname, export format may have changed`);
+                }
+
+                // belt-and-suspenders: also hand baseUrl to the runtime directly via its
+                // own config object, so it never has to fall back to computing one from
+                // location.origin/pathname itself. That fallback assumes a normal page or
+                // a file:// page, and breaks inside a blob: document (blob: URLs report
+                // location.origin as the *creator's* origin, not "null", and
+                // location.pathname as the entire inner blob URL) - which is exactly the
+                // context this runs in once we hand the browser a blob URL.
+                const beforeBaseUrlInject = patched;
+                patched = patched.replace(
+                    /new RuntimeInterface\(\{/,
+                    `new RuntimeInterface({baseUrl:${JSON.stringify(baseUrl)},`
+                );
+                if (patched === beforeBaseUrlInject) {
+                    console.warn(`[${name}] couldn't find a \`new RuntimeInterface({\` call to inject baseUrl into, export format may have changed`);
                 }
 
                 htmlContent = htmlContent.replace(mainJsMatch[0], `<script>${patched}</script>`);
