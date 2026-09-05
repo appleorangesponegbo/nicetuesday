@@ -66,6 +66,15 @@ nav a.active {
     font-weight: bold;
 }
 
+nav hr {
+    width: 100%;
+    height: 0;
+    border: none;
+    border-top: 1px solid #555;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 .content {
     height: 80vh;
     overflow: hidden;
@@ -108,6 +117,12 @@ nav a.active {
     min-height: 0;
     overflow-y: auto;
     padding-right: 6px;
+}
+
+.empty-state {
+    display: block;
+    color: #999;
+    padding: 40px 20px;
 }
 
 .game-search {
@@ -286,11 +301,30 @@ nav a.active {
 }
 
 .gd-stats {
-    text-align: right;
+    flex-shrink: 0;
+}
+
+.gd-stats-table {
+    border-collapse: collapse;
     font-size: 12px;
     color: #aaa;
     line-height: 1.4;
+}
+
+.gd-stats-table td {
     white-space: nowrap;
+    padding: 0;
+}
+
+.gd-stats-table td:first-child {
+    text-align: right;
+    padding-right: 12px;
+    border-right: 1px solid #4a4a4a;
+}
+
+.gd-stats-table td:last-child {
+    text-align: left;
+    padding-left: 12px;
 }
 
 .gd-controls {
@@ -392,7 +426,7 @@ nav a.active {
     transition: border-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
 }
 
-#gameList:has(.g-launch:hover) .g-launch:not(:hover) {
+.content:has(.g-launch:hover) .g-launch:not(:hover) {
     opacity: 0.4;
     transform: scale(0.98);
 }
@@ -413,6 +447,23 @@ nav a.active {
     opacity: 0.6;
 }
 
+.g-playtime {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.2;
+    padding: 2px 6px;
+    border-radius: 3px;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
 .pinwheel-bg {
   position: absolute;
   top: 0;
@@ -422,7 +473,7 @@ nav a.active {
   transform: translate(-50%, -50%);
   overflow: hidden;
   opacity: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   transition: opacity 0.7s ease, top 0.2s ease, left 0.2s ease;
 }

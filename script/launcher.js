@@ -18,6 +18,16 @@ function formatRelativeTime(ts) {
   return `${years} year${years === 1 ? "" : "s"} ago`;
 }
 
+function formatDuration(ms) {
+  const totalSeconds = Math.floor((ms || 0) / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${seconds}s`;
+  return `${seconds}s`;
+}
+
 // default repo used by the "#folder" shorthand
 // basically, if its one of our games on github, use "#"
 // if its just one we used from a different repo, do OWNER/REPO@REF/FOLDER
@@ -122,6 +132,51 @@ function buildSwfWrapperHtml(swfUrl) {
 </html>`;
 }
 
+function createGameButton(game) {
+  const btn = document.createElement("button");
+  btn.className = "g-launch";
+  btn.dataset.g = game.id;
+  btn.dataset.n = game.title;
+
+  const img = document.createElement("img");
+  img.src = game.image;
+  img.width = 120;
+  img.alt = game.title;
+  btn.appendChild(img);
+
+  const totalMs = storage.getStats(game.id).totalPlayTime || 0;
+  if (totalMs > 0) {
+    const badge = document.createElement("span");
+    badge.className = "g-playtime";
+    badge.textContent = formatDuration(totalMs);
+    btn.appendChild(badge);
+  }
+
+  btn.addEventListener("click", () => openGamePanel(game.id));
+  return btn;
+}
+
+function updatePlaytimeBadges(id, overrideMs) {
+  const ms = overrideMs !== undefined ? overrideMs : (storage.getStats(id).totalPlayTime || 0);
+  document.querySelectorAll(".g-launch").forEach((btn) => {
+    if (btn.dataset.g !== id) return;
+    let badge = btn.querySelector(".g-playtime");
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "g-playtime";
+      btn.appendChild(badge);
+    }
+    badge.textContent = formatDuration(ms);
+  });
+}
+
+function refreshAllPlaytimeBadges() {
+  const stats = storage.loadStats();
+  Object.keys(stats).forEach((id) => {
+    if (stats[id].totalPlayTime > 0) updatePlaytimeBadges(id);
+  });
+}
+
 async function loadGames() {
   const list = document.getElementById("gameList");
   try {
@@ -137,35 +192,61 @@ async function loadGames() {
       total += 1
       GAMES[game.id] = game;
 
-      const btn = document.createElement("button");
-      btn.className = "g-launch";
-      btn.dataset.g = game.id;
-
       if (game.id.startsWith('#')) {
         supplied += 1
       } else if (game.id.startsWith('@')) {
         flash += 1
       }
 
-      btn.dataset.n = game.title;
-
-      const img = document.createElement("img");
-      img.src = game.image;
-      img.width = 120;
-      img.alt = game.title;
-
-      btn.appendChild(img);
-      btn.addEventListener("click", () => openGamePanel(game.id));
-
-      list.appendChild(btn);
+      list.appendChild(createGameButton(game));
     });
 
     document.getElementById('totalgams').innerText = total;
     document.getElementById('flashgams').innerText = flash;
     document.getElementById('suppliedgams').innerText = supplied;
+
+    refreshAllPlaytimeBadges();
   } catch (error) {
     console.error("error loading games list:", error);
   }
+}
+
+function renderFavorites() {
+  const container = document.getElementById("favList");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const favs = storage.loadFavorites();
+  const ids = Object.keys(favs).filter((id) => GAMES[id]);
+
+  if (ids.length === 0) {
+    container.innerHTML = `<center class="empty-state">no favorites yet. click the ☆ on a game to add one!</center>`;
+    return;
+  } else {
+    container.innerHTML = "<br>";
+  }
+
+  ids.forEach((id) => container.appendChild(createGameButton(GAMES[id])));
+}
+
+function renderRecent() {
+  const container = document.getElementById("recentList");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const stats = storage.loadStats();
+  const ids = Object.keys(stats)
+    .filter((id) => GAMES[id] && stats[id].lastPlayed)
+    .sort((a, b) => stats[b].lastPlayed - stats[a].lastPlayed);
+
+  if (ids.length === 0) {
+    container.innerHTML = `<center class="empty-state">no games played yet. go play something!</center>`;
+    return;
+  } else {
+    container.innerHTML = "<br>";
+  }
+
+  ids.forEach((id) => container.appendChild(createGameButton(GAMES[id])));
 }
 
 let currentGame = null;
@@ -209,13 +290,7 @@ async function prepareGameBlobURL(name) {
         htmlContent = "<!DOCTYPE html>\n" + htmlContent;
     }
 
-    // Don't gate this on the <meta name="generator" content="Construct 3"> tag -
-    // repackaged/rebranded exports (e.g. sites that wrap the game in their own
-    // index.html template) routinely strip that tag even though the underlying
-    // main.js is still the standard Construct 3 runtime. Look for the main*.js
-    // script tag directly, and confirm it's actually a C3 runtime by checking the
-    // fetched script's own content instead.
-    // src= no longer has to be the first attribute on the tag
+    // construct 3 patcher
     const mainJsMatch = htmlContent.match(/<script\b(?=[^>]*\bsrc=["']([^"']*\bmain[a-zA-Z0-9_.-]*\.js)["'])[^>]*><\/script>/i);
     if (!mainJsMatch) {
         console.warn(`[${name}] couldn't find a main*.js script tag - not a Construct 3 export, or export format changed`);
@@ -232,9 +307,6 @@ async function prepareGameBlobURL(name) {
             } else {
                 let patched = mainJsText;
 
-                // some builds derive their worker/JobScheduler base from
-                // document.currentScript.src, which is "" once we inline this
-                // as a bodyless <script> below
                 const scriptFolderMatch = mainJsText.match(/scriptFolder\s*:\s*["']([^"']*)["']/);
                 const scriptsFolder = scriptFolderMatch ? scriptFolderMatch[1] : "scripts/";
                 const scriptsBaseUrl = new URL(scriptsFolder, baseUrl).toString();
@@ -248,13 +320,6 @@ async function prepareGameBlobURL(name) {
                     console.warn(`[${name}] main.js doesn't reference location.origin/pathname, export format may have changed`);
                 }
 
-                // belt-and-suspenders: also hand baseUrl to the runtime directly via its
-                // own config object, so it never has to fall back to computing one from
-                // location.origin/pathname itself. That fallback assumes a normal page or
-                // a file:// page, and breaks inside a blob: document (blob: URLs report
-                // location.origin as the *creator's* origin, not "null", and
-                // location.pathname as the entire inner blob URL) - which is exactly the
-                // context this runs in once we hand the browser a blob URL.
                 const beforeBaseUrlInject = patched;
                 patched = patched.replace(
                     /new RuntimeInterface\(\{/,
@@ -324,6 +389,50 @@ async function playFullscreen(name) {
     }
 }
 
+let sessionGame = null;
+let sessionStart = null;
+let sessionInterval = null;
+
+function updateSessionDisplay() {
+  if (!sessionGame || !sessionStart) return;
+  const elapsed = Date.now() - sessionStart;
+  const baseTotal = storage.getStats(sessionGame).totalPlayTime || 0;
+
+  const sessionEl = document.getElementById("gdSessionTime");
+  const totalEl = document.getElementById("gdTotalTime");
+  if (sessionEl) sessionEl.textContent = `session: ${formatDuration(elapsed)}`;
+  if (totalEl) totalEl.textContent = `total: ${formatDuration(baseTotal + elapsed)}`;
+
+  updatePlaytimeBadges(sessionGame, baseTotal + elapsed);
+}
+
+function startSession(name) {
+  sessionGame = name;
+  sessionStart = Date.now();
+  updateSessionDisplay();
+  sessionInterval = setInterval(updateSessionDisplay, 1000);
+}
+
+function endSession() {
+  if (sessionGame && sessionStart) {
+    const elapsed = Date.now() - sessionStart;
+    storage.addPlayTime(sessionGame, elapsed);
+    updatePlaytimeBadges(sessionGame);
+    refreshAllPlaytimeBadges();
+    renderRecent();
+  }
+  if (sessionInterval) clearInterval(sessionInterval);
+  sessionInterval = null;
+  sessionGame = null;
+  sessionStart = null;
+}
+
+window.addEventListener("beforeunload", () => {
+  if (sessionGame && sessionStart) {
+    storage.addPlayTime(sessionGame, Date.now() - sessionStart);
+  }
+});
+
 async function playGame(name) {
     try {
         const data = GAMES[name] || { title: name, image: "" };
@@ -342,6 +451,12 @@ async function playGame(name) {
         const { playCount } = storage.recordPlay(name);
         document.getElementById("gdPlayCount").textContent =
             `played ${playCount} time${playCount === 1 ? "" : "s"}`;
+        renderRecent();
+
+        if (sessionGame !== name) {
+            endSession();
+            startSession(name);
+        }
 
         const favBtn = document.getElementById("gdFavoriteBtn");
         const favorited = storage.isFavorite(name);
@@ -366,6 +481,7 @@ async function reloadCurrentGame() {
 }
 
 document.getElementById('gdCloseBtn').addEventListener('click', function () {
+  endSession();
   document.getElementById('gameDialog').classList.remove('active');
   document.getElementById("gameFrame").src = "";
   document.getElementById("gdFullscreenMenu").classList.remove("open");
@@ -380,9 +496,9 @@ document.getElementById('gpClose').addEventListener('click', function () {
 });
 
 const pinwheelBg = document.getElementById('pinwheelBg');
-const gameArea = document.querySelector('.content'); // the cqmin/positioning container
+const gameArea = document.querySelector('.content');
 
-document.getElementById('gameList').addEventListener('mouseover', (e) => {
+gameArea.addEventListener('mouseover', (e) => {
     const btn = e.target.closest('.g-launch');
     if (btn) {
         const btnRect = btn.getBoundingClientRect();
@@ -397,7 +513,7 @@ document.getElementById('gameList').addEventListener('mouseover', (e) => {
 });
 
 // button related stuff, shouldnt change
-document.getElementById('gameList').addEventListener('mouseout', (e) => {
+gameArea.addEventListener('mouseout', (e) => {
     const stillOverButton = e.relatedTarget && e.relatedTarget.closest('.g-launch');
     if (e.target.closest('.g-launch') && !stillOverButton) {
         pinwheelBg.classList.remove('active');
@@ -416,6 +532,7 @@ document.getElementById("gamePanelFavorite").addEventListener("click", () => {
   const btn = document.getElementById("gamePanelFavorite");
   btn.classList.toggle("favorited", favorited);
   btn.textContent = favorited ? "★" : "☆";
+  renderFavorites();
 });
 
 document.getElementById("gdFavoriteBtn").addEventListener("click", () => {
@@ -431,6 +548,7 @@ document.getElementById("gdFavoriteBtn").addEventListener("click", () => {
     panelFavBtn.classList.toggle("favorited", favorited);
     panelFavBtn.textContent = favorited ? "★" : "☆";
   }
+  renderFavorites();
 });
 
 document.getElementById("gdReloadBtn").addEventListener("click", () => {
@@ -460,5 +578,11 @@ document.getElementById("gdNewTab").addEventListener("click", () => {
   document.getElementById("gdFullscreenMenu").classList.remove("open");
   if (currentGame) playFullscreen(currentGame);
 });
+
+const favsTabLink = document.querySelector('nav a[data-tab="favs"]');
+if (favsTabLink) favsTabLink.addEventListener("click", renderFavorites);
+
+const recentTabLink = document.querySelector('nav a[data-tab="recentlyplayed"]');
+if (recentTabLink) recentTabLink.addEventListener("click", renderRecent);
 
 loadGames();
